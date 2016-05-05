@@ -1,0 +1,1 @@
+source ./ljenv/bin/activate
