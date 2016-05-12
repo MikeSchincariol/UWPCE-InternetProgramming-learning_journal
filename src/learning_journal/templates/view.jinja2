@@ -1,0 +1,20 @@
+{% extends "templates/layout.jinja2" %}
+{% block body %}
+<b>-- View Entry --</b>
+<form action="{{ request.route_url('action', action='edit') }}" method="POST">
+{% for field in form %}
+  {% if field.errors %}
+    <ul>
+    {% for error in field.errors %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+    <p>{{ field.label }}: {{ field }}</p>
+{% endfor %}
+    <p><input type="submit" name="edit" value="Edit" /></p>
+</form>
+<form action="{{ request.host_url }}" method="GET">
+    <p><input type="submit" name="exit" value="Exit" /></p>
+</form>
+{% endblock %}

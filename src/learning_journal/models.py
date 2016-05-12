@@ -38,10 +38,10 @@ class Entry(Base):
     title = Column(Unicode(255), nullable=False, unique=True)
     body = Column(UnicodeText)
     created = Column(DateTime, default=datetime.now)
-    edited = Column(DateTime, default=datetime.now)
+    edited = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     @classmethod
-    def all(cls, session):
+    def all(cls, session=None):
         """
         Returns all entries from the database, ordered by most recent
         entry first.
@@ -49,21 +49,23 @@ class Entry(Base):
                         the correct engine.
         :return: A list.:
         """
+        if session is None:
+            session = DBSession
         # May need to import desc from sqlalchemy for this to work
         results = session.query(cls).order_by(cls.created.desc()).all()
 
         # For now, print out a table of the results. Later, this may be
         # removed in favor of just returning the result list.
-        print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
-        print("{0:<5} {1:32} {2:12}".format("ID", "TITLE", "DATETIME"))
-        print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
+        # print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
+        # print("{0:<5} {1:32} {2:12}".format("ID", "TITLE", "DATETIME"))
+        # print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
         for row in results:
             print("{0:<5} {1:32} {2:12}".format(row.id, row.title, row.created.isoformat()))
         return results
 
 
     @classmethod
-    def by_id(cls, entry_id, session):
+    def by_id(cls, entry_id, session=None):
         """
         Returns a single entry given by the ID number provided.
         :param entry_id: The integer value of the primary key, 'id', to search for.
@@ -71,11 +73,13 @@ class Entry(Base):
                         the correct engine.
         :return: An instance of the Entry class.
         """
+        if session is None:
+            session = DBSession
         results = session.query(cls).filter(cls.id == entry_id).one_or_none()
-        print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
-        print("{0:<5} {1:32} {2:12}".format("ID", "TITLE", "DATETIME"))
-        print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
-        print("{0:<5} {1:32} {2:12}".format(results.id, results.title, results.created.isoformat()))
+        # print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
+        # print("{0:<5} {1:32} {2:12}".format("ID", "TITLE", "DATETIME"))
+        # print("{0:<5} {1:32} {2:12}".format("--", "-----", "--------"))
+        # print("{0:<5} {1:32} {2:12}".format(results.id, results.title, results.created.isoformat()))
         return results
 
 
